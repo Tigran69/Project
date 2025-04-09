@@ -6,7 +6,7 @@ public class Archer extends Unit {
     
 
     public Archer(Player owner) {
-        super("A", 80, 15, 4, 3, owner);
+        super("A", 80, 15, 4, 3, owner, 300);
     }
 
     public void attack(Unit enemy) {

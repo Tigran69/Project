@@ -6,7 +6,7 @@ public class Tank extends Unit {
     
 
     public Tank(Player owner) {
-        super("T", 200, 20, 2, 1, owner);
+        super("T", 200, 20, 2, 1, owner,200);
     }
 
     public void attack(Unit enemy) {

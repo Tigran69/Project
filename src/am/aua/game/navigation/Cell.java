@@ -4,8 +4,8 @@ import am.aua.game.players.Player;
 import am.aua.game.units.Unit;
 
 public class Cell {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private Player owner;
     private Unit unit;
 

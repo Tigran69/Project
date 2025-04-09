@@ -3,20 +3,22 @@ package am.aua.game.units;
 import am.aua.game.players.Player;
 
 public abstract class Unit {
-    private String symbol;
+    private final String symbol;
     protected int health;
     protected int attackPower;
     protected int movementRange;
     protected int attackRange;
-    private Player owner;
+    private final Player owner;
+    private final int price;
 
-    public Unit(String symbol, int health, int attackPower, int movementRange, int attackRange, Player owner) {
+    public Unit(String symbol, int health, int attackPower, int movementRange, int attackRange, Player owner, int price) {
         this.symbol = symbol;
         this.health = health;
         this.attackPower = attackPower;
         this.movementRange = movementRange;
         this.attackRange = attackRange;
         this.owner = owner;
+        this.price = price;
     }
 
     public int getHealth() {
@@ -41,6 +43,10 @@ public abstract class Unit {
 
     public String getSymbol() {
         return symbol;
+    }
+
+    public int getPrice(){
+        return price;
     }
 
     public abstract void attack(Unit enemy);
