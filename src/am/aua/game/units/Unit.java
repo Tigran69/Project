@@ -1,5 +1,6 @@
 package am.aua.game.units;
 
+import am.aua.game.navigation.Cell;
 import am.aua.game.players.Player;
 
 public abstract class Unit {
@@ -10,6 +11,7 @@ public abstract class Unit {
     protected int attackRange;
     private final Player owner;
     private final int price;
+
 
     public Unit(String symbol, int health, int attackPower, int movementRange, int attackRange, Player owner, int price) {
         this.symbol = symbol;
@@ -49,7 +51,14 @@ public abstract class Unit {
         return price;
     }
 
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
     public abstract void attack(Unit enemy);
+
+
+
 
     // move
     // isinrange

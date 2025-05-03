@@ -8,12 +8,27 @@ public class Cell {
     private final int y;
     private Player owner;
     private Unit unit;
+    private TerrainType terrain;
 
-    public Cell(int x, int y, Player owner, Unit unit) {
+    public enum TerrainType {
+        NORMAL, ROCK, TREE
+    }
+
+
+    public Cell(int x, int y, Player owner, Unit unit, TerrainType terrain) {
         this.x = x;
         this.y = y;
         this.owner = owner;
         this.unit = unit;
+        this.terrain = terrain;
+    }
+
+    public TerrainType getTerrain() {
+        return terrain;
+    }
+
+    public void setTerrain(TerrainType terrain) {
+        this.terrain = terrain;
     }
 
     public int getX() {
@@ -26,6 +41,10 @@ public class Cell {
 
     public Player getOwner() {
         return owner;
+    }
+
+    public void setOwner(Player owner) {
+        this.owner = owner;
     }
 
     public Unit getUnit() {
@@ -42,6 +61,10 @@ public class Cell {
 
     public boolean isOccupied() {
         return unit != null;
+    }
+
+    public boolean isPassable() {
+        return terrain == TerrainType.NORMAL;
     }
 
     public void changeOwner(Player newOwner) {
