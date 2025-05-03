@@ -8,8 +8,5 @@ public class Tank extends Unit {
         super("T", 200, 20, 2, 1, owner,200);
     }
 
-    public void attack(Unit enemy) {
-
-    }
 
 }

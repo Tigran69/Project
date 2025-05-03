@@ -1,4 +1,5 @@
 package am.aua.game.players;
+import am.aua.game.exceptions.CoordinateBlocked;
 import am.aua.game.navigation.Cell;
 import am.aua.game.navigation.Map;
 import am.aua.game.units.Unit;
@@ -50,9 +51,11 @@ public class Player {
         return units;
     }
 
-    public void buyUnit(Unit unit) {
-        this.units.add(unit);
-        this.resources -= unit.getPrice();
+    public void buyUnit(Unit unit, int x, int y, Map map) throws CoordinateBlocked {
+            this.units.add(unit);
+            this.resources -= unit.getPrice();
+            placeUnit(unit, x, y, map);
+
     }
 
     public void sellUnit(Unit unit) {
@@ -79,10 +82,10 @@ public class Player {
 
     }
 
-    public void placeUnit(Unit u,int x, int y, Map map){
+    public void placeUnit(Unit u,int x, int y, Map map) throws CoordinateBlocked {
         Cell position = map.getCellAt(x,y);
         boolean neighboursOccupied = false;
-        if (!position.isOccupied()){
+        if (!position.isOccupied() && position.getTerrain() == Cell.TerrainType.NORMAL){
             for (Cell cells : map.getNeighbouringCells(position)){
                 if (cells.isOccupied() && !cells.getOwner().equals(this)){
                     neighboursOccupied = true;
@@ -91,6 +94,9 @@ public class Player {
             if (!neighboursOccupied){
                 position.setOwner(this);
                 position.setUnit(u);
+            }
+            else {
+                throw new CoordinateBlocked();
             }
         }
     }

@@ -55,12 +55,10 @@ public abstract class Unit {
         this.health = health;
     }
 
-    public abstract void attack(Unit enemy);
 
 
 
 
-    // move
-    // isinrange
-    // calculatedistance
+
+
 }

@@ -9,7 +9,5 @@ public class Soldier extends Unit {
         super("S", 100, 10, 3, 1, owner,150);
     }
     
-    public void attack(Unit enemy) {
-        
-    }
+
 }

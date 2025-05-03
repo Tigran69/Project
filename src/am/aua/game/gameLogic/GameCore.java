@@ -1,5 +1,7 @@
 package am.aua.game.gameLogic;
 
+import am.aua.game.exceptions.NotYourUnitException;
+import am.aua.game.exceptions.PathNotClearException;
 import am.aua.game.fileIO.SaveLoadManager;
 import am.aua.game.navigation.Cell;
 import am.aua.game.navigation.Map;
@@ -36,7 +38,6 @@ public class GameCore {
         collectRecourses();
         int currentIndex = players.indexOf(currentPlayer);
         currentPlayer = players.get((currentIndex + 1) % players.size());
-        getMap().printMap();
     }
 
     public void collectRecourses(){

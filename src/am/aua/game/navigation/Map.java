@@ -12,7 +12,7 @@ public class Map {
 
 
     public Map(){
-        generateMap();      // do we need a logic that does not allow us to create a map more than once?
+        generateMap();
     }
 
     public void generateMap(){
@@ -69,7 +69,7 @@ public class Map {
     public static final String GREEN = "\u001B[32m";
     public static final String GREY = "\u001B[90m";
 
-    public void printMap() {
+    public void printMap() { // MOVED TO GAMECONSOLE BY LILIT TO KEEP MVC
         System.out.print("   ");
         for (int y = 0; y < height; y++) {
             System.out.printf("%2d ", y);
