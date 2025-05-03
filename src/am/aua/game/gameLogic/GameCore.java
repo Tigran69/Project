@@ -120,11 +120,11 @@ public class GameCore {
         return !dest.isOccupied() && !isBlockedTerrain(dest);
     }
 
-    public void moveUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition) {
+    public void moveUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition) { //LILIT
 
     }
 
-    public void attackUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition) {
+    public void attackUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition)  { //LILIT
 
     }
 
