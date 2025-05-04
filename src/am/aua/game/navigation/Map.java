@@ -68,6 +68,9 @@ public class Map {
     public static final String RESET = "\u001B[0m";
     public static final String GREEN = "\u001B[32m";
     public static final String GREY = "\u001B[90m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+
 
     public void printMap() { // MOVED TO GAMECONSOLE BY LILIT TO KEEP MVC
         System.out.print("   ");
@@ -85,10 +88,12 @@ public class Map {
 
                 if (c.isOccupied()) {
                     String unitSymbol = c.getUnit().getSymbol();
-                    if (c.getOwner() != null && c.getOwner().getName().equals("Player1")) {
+                    if (c.getOwner() != null && c.getOwner().getName().equals("Player1")) { //CHANGE TO IF THE PLAYER IS players.get(0);
                         symbol = unitSymbol.toUpperCase();
+                        color = ANSI_RED;
                     } else {
-                        symbol = unitSymbol.toLowerCase();
+                        symbol = unitSymbol.toUpperCase();
+                        color = ANSI_CYAN;
                     }
                 } else {
                     switch (c.getTerrain()) {

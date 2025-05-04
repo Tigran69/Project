@@ -1,7 +1,5 @@
 package am.aua.game.gameLogic;
 
-import am.aua.game.exceptions.NotYourUnitException;
-import am.aua.game.exceptions.PathNotClearException;
 import am.aua.game.fileIO.SaveLoadManager;
 import am.aua.game.navigation.Cell;
 import am.aua.game.navigation.Map;
@@ -48,7 +46,7 @@ public class GameCore {
     }
 
     public boolean checkLooseCondition(){
-        return this.currentPlayer.getUnits().isEmpty() || this.currentPlayer.getTerritory().isEmpty();
+        return (this.currentPlayer.getUnits().isEmpty() || this.currentPlayer.getTerritory().isEmpty()) && turnCount != 0;
     }
 
     public int getTurnCount(){

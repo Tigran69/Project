@@ -37,7 +37,7 @@ public class SaveLoadManager {
                         writer.println("UNIT:" + unit.getClass().getSimpleName() + ":" +
                                 unit.getPrice() + ":" +
                                 unit.getOwner().getName() + ":" +
-                                x + "," + y);
+                                x + "," + y + ":" + cell.getUnit().getHealth());
                     }
                 }
             }
@@ -81,6 +81,7 @@ public class SaveLoadManager {
                     String[] coords = parts[4].split(",");
                     int x = Integer.parseInt(coords[0]);
                     int y = Integer.parseInt(coords[1]);
+                    int hp = Integer.parseInt(parts[5]);
 
                     Player owner = null;
                     for (Player p : players) {
@@ -96,6 +97,7 @@ public class SaveLoadManager {
                     else if (type.equals("Soldier")) unit = new Soldier(owner);
 
                     if (unit != null && owner != null) {
+                        unit.setHealth(hp);
                         owner.getUnits().add(unit);
                         Cell cell = map.getCellAt(x, y);
                         cell.setUnit(unit);

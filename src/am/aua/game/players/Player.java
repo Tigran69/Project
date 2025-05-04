@@ -1,5 +1,5 @@
 package am.aua.game.players;
-import am.aua.game.exceptions.CoordinateBlocked;
+import am.aua.game.exceptions.CoordinateBlockedException;
 import am.aua.game.exceptions.NotEnoughMoneyException;
 import am.aua.game.navigation.Cell;
 import am.aua.game.navigation.Map;
@@ -52,7 +52,7 @@ public class Player {
         return units;
     }
 
-    public void buyUnit(Unit unit, int x, int y, Map map) throws CoordinateBlocked, NotEnoughMoneyException {
+    public void buyUnit(Unit unit, int x, int y, Map map) throws CoordinateBlockedException, NotEnoughMoneyException {
             if(this.resources >= unit.getPrice()) {
                 placeUnit(unit, x, y, map);
                 this.units.add(unit);
@@ -80,18 +80,18 @@ public class Player {
         this.territory.remove(cell);
     }
 
-    public void moveUnit(Unit u, Cell oldPosition, Cell newPosition) throws CoordinateBlocked {
+    public void moveUnit(Unit u, Cell oldPosition, Cell newPosition) throws CoordinateBlockedException {
         if (!newPosition.isOccupied() && newPosition.getTerrain() == Cell.TerrainType.NORMAL) {
             newPosition.setOwner(this);
             oldPosition.setUnit(null);
             newPosition.setUnit(u);
         }
         else {
-            throw new CoordinateBlocked();
+            throw new CoordinateBlockedException();
         }
     }
 
-    public void placeUnit(Unit u,int x, int y, Map map) throws CoordinateBlocked {
+    public void placeUnit(Unit u,int x, int y, Map map) throws CoordinateBlockedException {
         Cell position = map.getCellAt(x,y);
         boolean neighboursOccupied = false;
         if (!position.isOccupied() && position.getTerrain() == Cell.TerrainType.NORMAL){
@@ -105,7 +105,7 @@ public class Player {
                 position.setUnit(u);
             }
             else {
-                throw new CoordinateBlocked();
+                throw new CoordinateBlockedException();
             }
         }
     }
