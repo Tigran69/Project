@@ -72,53 +72,7 @@ public class Map {
     public static final String ANSI_CYAN = "\u001B[36m";
 
 
-    public void printMap() { // MOVED TO GAMECONSOLE BY LILIT TO KEEP MVC
-        System.out.print("   ");
-        for (int y = 0; y < height; y++) {
-            System.out.printf("%2d ", y);
-        }
-        System.out.println();
-
-        for (int x = 0; x < width; x++) {
-            System.out.printf("%2d ", x);
-            for (int y = 0; y < height; y++) {
-                Cell c = grid[x][y];
-                String symbol = ".";
-                String color = "";
-
-                if (c.isOccupied()) {
-                    String unitSymbol = c.getUnit().getSymbol();
-                    if (c.getOwner() != null && c.getOwner().getName().equals("Player1")) { //CHANGE TO IF THE PLAYER IS players.get(0);
-                        symbol = unitSymbol.toUpperCase();
-                        color = ANSI_RED;
-                    } else {
-                        symbol = unitSymbol.toUpperCase();
-                        color = ANSI_CYAN;
-                    }
-                } else {
-                    switch (c.getTerrain()) {
-                        case TREE:
-                            symbol = "T";
-                            color = GREEN;
-                            break;
-                        case ROCK:
-                            symbol = "R";
-                            color = GREY;
-                            break;
-                        default:
-                            symbol = "O";
-                            break;
-                    }
-                }
-
-                System.out.print(" " + color + symbol + RESET + " ");
-            }
-            System.out.println();
-        }
-    }
-
-
-
+    
 
     public Cell[][] getGrid(){
         return grid;

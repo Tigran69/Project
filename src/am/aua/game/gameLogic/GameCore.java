@@ -5,6 +5,7 @@ import am.aua.game.navigation.Cell;
 import am.aua.game.navigation.Map;
 import am.aua.game.players.Player;
 import am.aua.game.units.Unit;
+import am.aua.game.exceptions.*;
 
 import java.util.List;
 
@@ -118,12 +119,44 @@ public class GameCore {
         return !dest.isOccupied() && !isBlockedTerrain(dest);
     }
 
-    public void moveUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition) { //LILIT
-
+    public void moveUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition) throws NotYourUnitException, PathNotClearException{ 
+        if(unit.getOwner().equals(currentPlayer)){
+            if (isPathClear(oldPosition, newPosition)) {
+                    oldPosition.setUnit(null);
+                    newPosition.setUnit(unit);
+                    newPosition.setOwner(currentPlayer);
+                }
+                else {
+                        throw new PathNotClearException();
+                }
+        }
+                else {
+                    throw new NotYourUnitException();
+                }
     }
 
-    public void attackUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition)  { //LILIT
+    public void attackUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition)  throws NotYourUnitException, FriendlyFireException, OutOfRangeException {
+        if (!unit.getOwner().equals(currentPlayer)) 
+            throw new NotYourUnitException();
+    
+        if (!newPosition.isOccupied())
+            return;
 
+        Unit targetUnit = newPosition.getUnit();
+
+        if (targetUnit.getOwner().equals(currentPlayer)) 
+            throw new FriendlyFireException();
+        
+        if (!isInAttackRange(oldPosition, newPosition)) 
+            throw new OutOfRangeException();
+
+        int newHealth = targetUnit.getHealth() - unit.getAttackPower();
+        targetUnit.setHealth(newHealth);
+
+        if (newHealth <= 0) {
+            newPosition.removeUnit();
+            targetUnit.getOwner().getUnits().remove(targetUnit);
+        }
     }
 
     private boolean isBlockedTerrain(Cell cell) {
