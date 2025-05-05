@@ -87,28 +87,37 @@ public class Player {
             newPosition.setUnit(u);
         }
         else {
-            throw new CoordinateBlockedException();
+            throw new CoordinateBlockedException("Coordinate Blocked!");
         }
     }
 
-    public void placeUnit(Unit u,int x, int y, Map map) throws CoordinateBlockedException {
-        Cell position = map.getCellAt(x,y);
+    public void placeUnit(Unit u, int x, int y, Map map) throws CoordinateBlockedException {
+        Cell position = map.getCellAt(x, y);
+
+        if (position.isOccupied()) {
+            throw new CoordinateBlockedException("Cell is already occupied.");
+        }
+
+        if (!position.isPassable()) {
+            throw new CoordinateBlockedException("Cannot place unit on " + position.getTerrain() + " terrain.");
+        }
+
         boolean neighboursOccupied = false;
-        if (!position.isOccupied() && position.getTerrain() == Cell.TerrainType.NORMAL){
-            for (Cell cells : map.getNeighbouringCells(position)){
-                if (cells.isOccupied() && !cells.getOwner().equals(this)){
-                    neighboursOccupied = true;
-                }
-            }
-            if (!neighboursOccupied){
-                position.setOwner(this);
-                position.setUnit(u);
-            }
-            else {
-                throw new CoordinateBlockedException();
+        for (Cell neighbor : map.getNeighbouringCells(position)) {
+            if (neighbor.isOccupied() && !neighbor.getOwner().equals(this)) {
+                neighboursOccupied = true;
+                break;
             }
         }
+
+        if (neighboursOccupied) {
+            throw new CoordinateBlockedException("Enemy unit is too close.");
+        }
+
+        position.setOwner(this);
+        position.setUnit(u);
     }
+
 
     public char getAbbreviation() {
         return abbreviation;

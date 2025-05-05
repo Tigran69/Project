@@ -99,8 +99,8 @@ public class GameCore {
             return false;
         }
 
-        int stepX = Integer.compare(dx, 0); // -1, 0, or 1
-        int stepY = Integer.compare(dy, 0); // -1, 0, or 1
+        int stepX = Integer.compare(dx, 0);
+        int stepY = Integer.compare(dy, 0);
 
         int x = x0 + stepX;
         int y = y0 + stepY;
