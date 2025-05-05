@@ -14,12 +14,11 @@ public class SaveLoadManager {
     public static void saveGame(String filePath, GameCore gameCore) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
             writer.println("TURN:" + gameCore.getTurnCount());
-
+            writer.println("CURRENT_PLAYER:" + gameCore.getCurrentPlayer().getName());
             for (Player player : gameCore.getPlayers()) {
                 writer.println("PLAYER:" + player.getName() + ":" + player.getResources());
             }
 
-            // Save terrain types
             Map map = gameCore.getMap();
             for (int x = 0; x < 20; x++) {
                 for (int y = 0; y < 20; y++) {
@@ -28,7 +27,6 @@ public class SaveLoadManager {
                 }
             }
 
-            // Save units
             for (int x = 0; x < 20; x++) {
                 for (int y = 0; y < 20; y++) {
                     Cell cell = map.getCellAt(x, y);
@@ -50,8 +48,9 @@ public class SaveLoadManager {
 
     public static GameCore loadGame(String filePath) {
         List<Player> players = new ArrayList<>();
-        Map map = new Map(); // Assumes a 20x20 initialized grid
+        Map map = new Map();
         int turn = 0;
+        String currentPlayerName = null;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -104,6 +103,8 @@ public class SaveLoadManager {
                         cell.changeOwner(owner);
                         owner.addToTerritory(cell);
                     }
+                } else if (line.startsWith("CURRENT_PLAYER:")) {
+                    currentPlayerName = line.split(":")[1];
                 }
             }
 
@@ -114,6 +115,14 @@ public class SaveLoadManager {
         GameCore core = new GameCore(players, map);
         for (int i = 0; i < turn; i++) {
             core.nextTurn();
+        }
+        if (currentPlayerName != null) {
+            for (Player p : players) {
+                if (p.getName().equals(currentPlayerName)) {
+                    core.setCurrentPlayer(p);
+                    break;
+                }
+            }
         }
         return core;
     }
