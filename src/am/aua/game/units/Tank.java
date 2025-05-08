@@ -5,7 +5,7 @@ import am.aua.game.players.Player;
 public class Tank extends Unit {
 
     public Tank(Player owner) {
-        super("T", 200, 20, 2, 1, owner,200);
+        super("T", 200, 20, 2, 1, owner,400);
     }
 
 

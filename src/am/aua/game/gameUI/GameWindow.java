@@ -1,8 +1,7 @@
 package am.aua.game.gameUI;
 
-import am.aua.game.exceptions.CoordinateBlockedException;
-import am.aua.game.exceptions.MalformedStringException;
-import am.aua.game.exceptions.NotEnoughMoneyException;
+import am.aua.game.exceptions.*;
+import am.aua.game.fileIO.SaveLoadManager;
 import am.aua.game.gameLogic.GameCore;
 import am.aua.game.navigation.Cell;
 import am.aua.game.players.Player;
@@ -11,176 +10,390 @@ import am.aua.game.units.Soldier;
 import am.aua.game.units.Tank;
 import am.aua.game.units.Unit;
 
-import javax.swing.*;
-import java.awt.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+
+import java.io.File;
+import java.util.Objects;
+
+public class GameWindow {
+    private int CELL_SIZE = 32;
+
+    private final Stage stage;
+    private final GameCore gameCore;
+    private final int GRID_WIDTH;
+    private final int GRID_HEIGHT;
+
+    private Cell selectedCell = null;
+    private StackPane selectedCellPane = null;
+    private GridPane gridPane;
+
+    private Label currentPlayerLabel;
+    private Label playerResourcesLabel;
+    private Label currentPlayerUnitsLabel;
+    private Label currentPlayerTerritoryLabel;
+
+    private VBox rightPanel;
+    private final Label unitInfoPopup = new Label();
+
+    private boolean isBuying = false;
+    private Unit unitToBuy = null;
+
+    private int selectedRow = -1;
+    private int selectedCol = -1;
 
 
-public class GameWindow extends JFrame {
+    public GameWindow(Stage primaryStage, GameCore gameCore) {
+        this.stage = primaryStage;
+        this.gameCore = gameCore;
+        this.GRID_WIDTH = gameCore.getMap().getWidth();
+        this.GRID_HEIGHT = gameCore.getMap().getHeight();
 
-    private final int GRID_SIZE = 20;
-    private JButton[][] gridButtons = new JButton[GRID_SIZE][GRID_SIZE];
-    private JLabel currentPlayerLabel;
-    private JTextArea unitInfoArea;
+        double screenWidth = Screen.getPrimary().getBounds().getWidth();
+        double screenHeight = Screen.getPrimary().getBounds().getHeight();
+        int maxWidth = (int) (screenWidth * 0.8);
+        int maxHeight = (int) (screenHeight * 0.8);
 
-    public GameWindow(GameCore gameCore) {
-        setTitle("Strategy Game - " + gameCore.getCurrentPlayer().getName() + "'s Turn");
-        setSize(1200, 1000);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+        int cellWidth = maxWidth / GRID_WIDTH;
+        int cellHeight = maxHeight / GRID_HEIGHT;
+        this.CELL_SIZE = Math.max(32, Math.min(64, Math.min(cellWidth, cellHeight)));
+        BorderPane mainLayout = new BorderPane();
 
-        JPanel sidePanel = new JPanel();
-        sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
-        currentPlayerLabel = new JLabel("Current Player: " + gameCore.getCurrentPlayer().getName());
-        unitInfoArea = new JTextArea(6, 20);
-        unitInfoArea.setEditable(false);
+        gridPane = new GridPane();
+        gridPane.setHgap(1);
+        gridPane.setVgap(1);
+        gridPane.setPadding(new Insets(10));
+        gridPane.setBackground(Background.fill(Color.GREEN));
+        gridPane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        GridPane.setHgrow(gridPane, Priority.ALWAYS);
+        GridPane.setVgrow(gridPane, Priority.ALWAYS);
 
+        renderGrid();
 
-        sidePanel.add(currentPlayerLabel);
-        sidePanel.add(Box.createVerticalStrut(10));
-        sidePanel.add(Box.createVerticalStrut(10));
-        sidePanel.add(new JScrollPane(unitInfoArea));
+        currentPlayerLabel = new Label("Player: " + gameCore.getCurrentPlayer().getName());
+        playerResourcesLabel = new Label("Resources: " + gameCore.getCurrentPlayer().getResources());
+        currentPlayerUnitsLabel = new Label("Units: " + gameCore.getCurrentPlayer().getUnits().size());
+        currentPlayerTerritoryLabel = new Label("Territory: " + gameCore.getCurrentPlayer().getTerritory().size());
 
+        rightPanel = new VBox(10, currentPlayerLabel, playerResourcesLabel, currentPlayerUnitsLabel, currentPlayerTerritoryLabel);
+        rightPanel.setPadding(new Insets(10));
+        rightPanel.setStyle("-fx-background-color: #33f9ff;");
+        rightPanel.setPrefWidth(200);
+        rightPanel.setMaxHeight(Double.MAX_VALUE);
+        VBox.setVgrow(rightPanel, Priority.ALWAYS);
 
+        mainLayout.setCenter(gridPane);
+        mainLayout.setRight(rightPanel);
 
-        setVisible(true);
+        setupControls();
 
-        JPanel gridPanel = new JPanel(new GridLayout(GRID_SIZE, GRID_SIZE));
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-                JButton cell = new JButton();
-                if (gameCore.getMap().getCellAt(i,j).getTerrain() == Cell.TerrainType.TREE) {
-                    cell.setBackground(Color.GREEN);
-                    cell.setText("T");
-                }
-                else if (gameCore.getMap().getCellAt(i,j).getTerrain() == Cell.TerrainType.ROCK){
-                    cell.setBackground(Color.LIGHT_GRAY);
-                    cell.setText("R");
-                }
-                else {
-                    cell.setBackground(Color.WHITE);
-                }
-                cell.setMargin(new Insets(0, 0, 0, 0));
-                int row = i;
-                int col = j;
-                cell.addActionListener(e -> handleCellClick(row, col,gameCore,sidePanel));
-                gridButtons[i][j] = cell;
-                gridPanel.add(cell);
-            }
-        }
-        add(gridPanel, BorderLayout.CENTER);
-        add(sidePanel, BorderLayout.EAST);
+        unitInfoPopup.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-padding: 5;");
+        unitInfoPopup.setVisible(false);
 
+        StackPane root = new StackPane(mainLayout, unitInfoPopup);
+        StackPane.setAlignment(unitInfoPopup, Pos.TOP_LEFT);
+        StackPane.setMargin(unitInfoPopup, new Insets(10));
 
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Strategy Game");
+        stage.setResizable(true);
+        stage.setFullScreen(true);
+        stage.setMaximized(true);
+        stage.show();
     }
 
-    private void handleCellClick(int row, int col, GameCore gameCore, JPanel sidePanel) {
-        Unit unit = gameCore.getMap().getCellAt(row, col).getUnit();
-        sidePanel.removeAll();
+    private void renderGrid() {
+        gridPane.getChildren().clear();
 
-        updatePlayerInfo(gameCore, sidePanel);
+        for (int i = 0; i < GRID_WIDTH; i++) {
+            for (int j = 0; j < GRID_HEIGHT; j++) {
+                Cell cell = gameCore.getMap().getCellAt(i, j);
 
-        if (unit != null) {
-            unitInfoArea.setText("Unit Type: " + unit.getClass().getSimpleName()
-                    + "\nHP: " + unit.getHealth()
-                    + "\nOwner: " + unit.getOwner().getName());
+                StackPane stack = new StackPane();
+                stack.setPrefSize(CELL_SIZE, CELL_SIZE);
 
-            if (unit.getOwner().equals(gameCore.getCurrentPlayer())) {
-                JButton someActionButton = new JButton("Some Unit Action"); // Optional
-                sidePanel.add(Box.createVerticalStrut(10));
-                sidePanel.add(someActionButton);
-            }
+                String terrainFile = switch (cell.getTerrain()) {
+                    case TREE -> "tree.png";
+                    case ROCK -> "rock.png";
+                    default -> "grass.png";
+                };
 
-        } else {
-            unitInfoArea.setText("Empty cell at (" + row + "," + col + ")");
-            System.out.println("Clicked terrain: " + gameCore.getMap().getCellAt(row, col).getTerrain());
-            JButton buyUnitButton = new JButton("Buy Unit");
-                buyUnitButton.addActionListener(e -> {
-                    try {
-                        buyUnit(gameCore, row, col);
-                    } catch (MalformedStringException | CoordinateBlockedException ex) {
-                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                Image terrainImage = new Image(Objects.requireNonNull(
+                        getClass().getResourceAsStream("/am/aua/game/assets/" + terrainFile)));
+                ImageView terrainView = new ImageView(terrainImage);
+                terrainView.setFitWidth(CELL_SIZE);
+                terrainView.setFitHeight(CELL_SIZE);
+                stack.getChildren().add(terrainView);
+
+                Unit unit = cell.getUnit();
+                if (unit != null) {
+                    String unitFile = getUnitImageFilename(unit);
+                    Image unitImage = new Image(Objects.requireNonNull(
+                            getClass().getResourceAsStream("/am/aua/game/assets/" + unitFile)));
+                    ImageView unitView = new ImageView(unitImage);
+                    unitView.setFitWidth(CELL_SIZE);
+                    unitView.setFitHeight(CELL_SIZE);
+                    stack.getChildren().add(unitView);
+                }
+
+                // Determine if this cell is selected
+                boolean isSelected = (i == selectedRow && j == selectedCol);
+
+                // Set border color depending on selection or ownership
+                if (isSelected) {
+                    stack.setStyle("-fx-border-color: yellow; -fx-border-width: 1;");
+                } else if (cell.getOwner() != null) {
+                    if (cell.getOwner().equals(gameCore.getPlayers().get(0))) {
+                        stack.setStyle("-fx-border-color: red; -fx-border-width: 1;");
+                    } else if (cell.getOwner().equals(gameCore.getPlayers().get(1))) {
+                        stack.setStyle("-fx-border-color: blue; -fx-border-width: 1;");
                     }
-                });
+                } else {
+                    stack.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+                }
 
-            sidePanel.add(Box.createVerticalStrut(10));
-            sidePanel.add(buyUnitButton);
+                final int row = i, col = j;
+                stack.setOnMouseClicked(e -> handleCellClicked(row, col, e));
+                gridPane.add(stack, j, i);
+            }
         }
-
-        sidePanel.add(Box.createVerticalStrut(10));
-        sidePanel.add(new JScrollPane(unitInfoArea));
-        sidePanel.revalidate();
-        sidePanel.repaint();
-    }
-
-    private void updatePlayerInfo(GameCore gameCore, JPanel sidePanel) {
-        Player p = gameCore.getCurrentPlayer();
-        JLabel nameLabel = new JLabel("Current Player: " + p.getName());
-        JLabel moneyLabel = new JLabel("Money: " + p.getResources());
-        int unitCount = p.getUnits().size();
-
-
-        JLabel unitsLabel = new JLabel("Units: " + unitCount);
-        sidePanel.add(nameLabel);
-        sidePanel.add(moneyLabel);
-        sidePanel.add(unitsLabel);
     }
 
 
+    private void handleCellClicked(int row, int col, MouseEvent e) {
+        Cell clickedCell = gameCore.getMap().getCellAt(row, col);
+        Unit clickedUnit = clickedCell.getUnit();
 
-
-
-    private void buyUnit(GameCore gameCore, int row, int col) throws MalformedStringException, CoordinateBlockedException {
-        String unit = JOptionPane.showInputDialog("Enter Unit Type: T (Tank), A (Archer), S (Soldier)");
-
-        if (unit == null || unit.trim().isEmpty()) {
+        // Deselect if the same cell is clicked again
+        if (selectedCell != null && selectedCell == clickedCell) {
+            selectedCell = null;
+            selectedRow = -1;
+            selectedCol = -1;
+            unitInfoPopup.setVisible(false);
+            renderGrid();
             return;
         }
 
-        Unit unitToBuy;
-        try {
-            if (unit.equals("T")) {
-                unitToBuy = new Tank(gameCore.getCurrentPlayer());
-            } else if (unit.equals("A")) {
-                unitToBuy = new Archer(gameCore.getCurrentPlayer());
-            } else if (unit.equals("S")) {
-                unitToBuy = new Soldier(gameCore.getCurrentPlayer());
-            } else {
-                throw new MalformedStringException();
+        // If a cell is already selected (move/attack)
+        if (selectedCell != null) {
+            Unit selectedUnit = selectedCell.getUnit();
+            try {
+                if (clickedUnit == null) {
+                    try {
+                        gameCore.moveUnit(gameCore.getCurrentPlayer(), selectedUnit, selectedCell, clickedCell);
+                    }catch (NotYourUnitException | PathNotClearException | OutOfRangeException exception){
+                        new Alert(Alert.AlertType.ERROR, exception.getMessage()).showAndWait();
+                    }
+                } else if (clickedUnit.getOwner() != gameCore.getCurrentPlayer()) {
+                    try {
+                        gameCore.attackUnit(gameCore.getCurrentPlayer(), selectedUnit, selectedCell, clickedCell);
+                    }catch (NotYourUnitException | FriendlyFireException | OutOfRangeException | PathNotClearException | NoUnitSelectedException excep){
+                        new Alert(Alert.AlertType.ERROR, excep.getMessage()).showAndWait();
+                    }
+                }
+                selectedCell = null;
+                selectedRow = -1;
+                selectedCol = -1;
+                renderGrid();
+                currentPlayerLabel.setText("Current Player: " + gameCore.getCurrentPlayer().getName());
+                nextTurn();
+            } catch (Exception ex) {
+                new Alert(Alert.AlertType.ERROR, ex.getMessage()).show();
             }
+            return;
+        }
 
-            gameCore.getCurrentPlayer().buyUnit(unitToBuy, row, col, gameCore.getMap());
+        // If buying a unit
+        if (isBuying && unitToBuy != null) {
+            try {
+                gameCore.buyUnit(unitToBuy, row, col, gameCore.getMap());
+                isBuying = false;
+                unitToBuy = null;
+                renderGrid();
+                currentPlayerLabel.setText("Current Player: " + gameCore.getCurrentPlayer().getName());
+                updatePlayerInfoLabels();
+            } catch (CoordinateBlockedException | NotEnoughMoneyException | NotYourTerritoryException ex) {
+                new Alert(Alert.AlertType.ERROR, ex.getMessage()).show();
+            }
+            return;
+        }
 
-            gridButtons[row][col].setText(unitToBuy.getSymbol());
-            gridButtons[row][col].setBackground(
-                    gameCore.getCurrentPlayer() == gameCore.getPlayers().get(0) ? Color.RED : Color.YELLOW);
-
-            nextTurn(gameCore);
-
-        } catch (CoordinateBlockedException | NotEnoughMoneyException | MalformedStringException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+        // If clicked, select and show info
+        if (clickedUnit != null) {
+            selectedCell = clickedCell;
+            selectedRow = row;
+            selectedCol = col;
+            unitInfoPopup.setText(
+//                    "Type: " + clickedUnit.getClass().getSimpleName() + "\n" +
+                            "HP: " + clickedUnit.getHealth());
+//                            "Owner: " + clickedUnit.getOwner().getName());
+            unitInfoPopup.setLayoutX(e.getSceneX() + 5);
+            unitInfoPopup.setLayoutY(e.getSceneY() - 5);
+            unitInfoPopup.setVisible(true);
+            renderGrid(); // Show selection highlight
+        } else {
+            // Empty click or clicking an enemy unit not after a selection
+            selectedCell = null;
+            selectedRow = -1;
+            selectedCol = -1;
+            unitInfoPopup.setVisible(false);
+            renderGrid();
         }
     }
 
 
-    private void nextTurn(GameCore gameCore) {
-        gameCore.nextTurn();
-
-        currentPlayerLabel.setText("Current Player: " + gameCore.getCurrentPlayer().getName());
-        setTitle("Strategy Game - " + gameCore.getCurrentPlayer().getName() + "'s Turn");
-        updateSidePanelInfo(gameCore); // optional: show money and unit count
+    private String getUnitImageFilename(Unit unit) {
+        String prefix = (unit.getOwner() == gameCore.getPlayers().get(0)) ? "red." : "blue.";
+        return switch (unit.getClass().getSimpleName()) {
+            case "Tank" -> prefix + "tank.png";
+            case "Archer" -> prefix + "archer.png";
+            default -> prefix + "soldier.png";
+        };
     }
 
-    private void updateSidePanelInfo(GameCore gameCore) {
-        String sb = "";
-        sb += ("Current Player: ") + (gameCore.getCurrentPlayer().getName()) + ("\n");
-        sb += ("Money: ") + (gameCore.getCurrentPlayer().getResources()) + ("\n");
-        sb += ("Units: ") + (gameCore.getCurrentPlayer().getUnits().size()) + ("\n");
-        unitInfoArea.setText(sb);
+    private void setupControls() {
+        Button buyButton = new Button("Buy");
+        Button sellButton = new Button("Sell");
+        Button saveGameButton = new Button("Save Game");
+
+        buyButton.setOnAction(e -> handleBuy());
+        sellButton.setOnAction(e -> {
+            try {
+                handleSell();
+            } catch (NoUnitSelectedException | NotYourUnitException ex) {
+                new Alert(Alert.AlertType.WARNING, ex.getMessage()).show();
+            }
+        });
+        saveGameButton.setOnAction(e -> handleSaveGame());
+
+        rightPanel.getChildren().addAll(buyButton, sellButton, saveGameButton);
+    }
+
+    private void handleBuy() {
+        Stage popupStage = new Stage();
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(10));
+        layout.setAlignment(Pos.CENTER);
+
+        Label prompt = new Label("Choose a unit to buy:");
+
+        Button soldierBtn = new Button("Soldier (Cost: 150)");
+        Button archerBtn = new Button("Archer (Cost: 300)");
+        Button tankBtn = new Button("Tank (Cost: 400)");
+
+        soldierBtn.setOnAction(e -> {
+            unitToBuy = new Soldier(gameCore.getCurrentPlayer());
+            isBuying = true;
+            popupStage.close();
+        });
+
+        archerBtn.setOnAction(e -> {
+            unitToBuy = new Archer(gameCore.getCurrentPlayer());
+            isBuying = true;
+            popupStage.close();
+        });
+
+        tankBtn.setOnAction(e -> {
+            unitToBuy = new Tank(gameCore.getCurrentPlayer());
+            isBuying = true;
+            popupStage.close();
+        });
+
+        layout.getChildren().addAll(prompt, soldierBtn, archerBtn, tankBtn);
+        Scene scene = new Scene(layout);
+        popupStage.setScene(scene);
+        popupStage.setTitle("Buy Unit");
+        popupStage.show();
     }
 
 
+    private void handleSell() throws NoUnitSelectedException, NotYourUnitException {
+        if (selectedCell != null) {
+            gameCore.sellUnit(selectedCell);
+            selectedCell.setUnit(null);
+            selectedCell = null;
+
+            renderGrid();
+            updatePlayerInfoLabels();
+
+            System.out.println("Unit sold.");
+        }
+
+    }
 
 
+    private void handleSaveGame() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Game");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter( ".txt","*.txt"));
 
+        File file = fileChooser.showSaveDialog(stage);
+        if (file != null) {
+            SaveLoadManager.saveGame(file.getAbsolutePath(), gameCore);
+            System.out.println("Game saved successfully.");
+        }
+    }
+
+
+    private void updatePlayerInfoLabels() {
+        currentPlayerLabel.setText("Player: " + gameCore.getCurrentPlayer().getName());
+        playerResourcesLabel.setText("Resources: " + gameCore.getCurrentPlayer().getResources());
+        currentPlayerUnitsLabel.setText("Units: " + gameCore.getCurrentPlayer().getUnits().size());
+        currentPlayerTerritoryLabel.setText("Territory: " + gameCore.getCurrentPlayer().getTerritory().size());
+    }
+
+    private void checkDefeat() {
+        if (gameCore.checkLooseCondition()) {
+            Player loser = gameCore.getCurrentPlayer();
+            Player winner = gameCore.getPlayers().stream()
+                    .filter(p -> !p.equals(loser))
+                    .findFirst()
+                    .orElse(null);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Game Over");
+            alert.setHeaderText(null);
+
+            if (winner != null) {
+                alert.setContentText("Game Over! " + winner.getName() + " wins!");
+            } else {
+                alert.setContentText("Game Over! All players are defeated.");
+            }
+
+            alert.showAndWait();
+            stage.close(); // or go to main menu
+        }
+    }
+
+    public void nextTurn(){
+        renderGrid();
+        updatePlayerInfoLabels();
+        checkDefeat();
+    }
+
+    private void updateCellBorder(StackPane cellPane, Cell cell, boolean isSelected) {
+        if (isSelected) {
+            cellPane.setStyle("-fx-border-color: yellow; -fx-border-width: 1;");
+        } else {
+            cellPane.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+        }
+    }
 }
+
+
+
+
 

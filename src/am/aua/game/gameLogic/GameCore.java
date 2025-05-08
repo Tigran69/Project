@@ -1,12 +1,11 @@
 package am.aua.game.gameLogic;
 
+import am.aua.game.exceptions.*;
 import am.aua.game.fileIO.SaveLoadManager;
 import am.aua.game.navigation.Cell;
 import am.aua.game.navigation.Map;
 import am.aua.game.players.Player;
 import am.aua.game.units.Unit;
-import am.aua.game.exceptions.*;
-
 import java.util.List;
 
 public class GameCore {
@@ -16,11 +15,15 @@ public class GameCore {
     private int turnCount;
     private Map map;
 
-    public GameCore(List<Player> players) {
+    public GameCore(List<Player> players){
         this.players = players;
         this.currentPlayer = players.get(0);
         this.turnCount = 0;
         this.map = new Map();
+//        placeUnit(new Soldier(currentPlayer), 0,0,map);
+//        nextTurn();
+//        placeUnit(new Soldier(currentPlayer), map.getWidth()-1, map.getHeight()-1, map);
+//        nextTurn();
     }
 
     public GameCore(List<Player> players, Map map) {
@@ -47,7 +50,7 @@ public class GameCore {
     }
 
     public boolean checkLooseCondition(){
-        return (this.currentPlayer.getUnits().isEmpty() || this.currentPlayer.getTerritory().isEmpty()) && turnCount != 0;
+        return (this.currentPlayer.getResources() <= 0 || this.currentPlayer.getTerritory().isEmpty() && this.turnCount > 5);
     }
 
     public int getTurnCount(){
@@ -119,35 +122,55 @@ public class GameCore {
         return !dest.isOccupied() && !isBlockedTerrain(dest);
     }
 
-    public void moveUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition) throws NotYourUnitException, PathNotClearException{ 
-        if(unit.getOwner().equals(currentPlayer)){
-            if (isPathClear(oldPosition, newPosition)) {
-                    oldPosition.setUnit(null);
-                    newPosition.setUnit(unit);
-                    newPosition.setOwner(currentPlayer);
-                }
-                else {
-                        throw new PathNotClearException();
-                }
+    public void moveUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition)
+            throws NotYourUnitException, PathNotClearException, OutOfRangeException {
+
+        if (!unit.getOwner().equals(currentPlayer)) {
+            throw new NotYourUnitException();
         }
-                else {
-                    throw new NotYourUnitException();
-                }
+
+        if (!isInMovementRange(oldPosition, newPosition)) {
+            throw new OutOfRangeException();
+        }
+
+        if (!isPathClear(oldPosition, newPosition)) {
+            throw new PathNotClearException();
+        }
+
+        if (newPosition.isOccupied()) {
+            throw new PathNotClearException(); // Or use a new exception
+        }
+
+        // Move unit
+        oldPosition.setUnit(null);
+        newPosition.setUnit(unit);
+
+        if (newPosition.getOwner() != null && !newPosition.getOwner().equals(currentPlayer)) {
+            newPosition.getOwner().removeFromTerritory(newPosition);
+        }
+
+        newPosition.setOwner(currentPlayer);
+
+        if (!currentPlayer.getTerritory().contains(newPosition)) {
+            currentPlayer.addToTerritory(newPosition);
+        }
+        nextTurn();
     }
 
-    public void attackUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition)  throws NotYourUnitException, FriendlyFireException, OutOfRangeException {
-        if (!unit.getOwner().equals(currentPlayer)) 
+
+    public void attackUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition) throws NotYourUnitException, FriendlyFireException, OutOfRangeException, PathNotClearException, NoUnitSelectedException {
+        if (unit.getOwner() != currentPlayer)
             throw new NotYourUnitException();
-    
+
         if (!newPosition.isOccupied())
-            return;
+            throw new NoUnitSelectedException();
 
         Unit targetUnit = newPosition.getUnit();
 
-        if (targetUnit.getOwner().equals(currentPlayer)) 
+        if (targetUnit.getOwner() == this.currentPlayer)
             throw new FriendlyFireException();
-        
-        if (!isInAttackRange(oldPosition, newPosition)) 
+
+        if (!isInAttackRange(oldPosition, newPosition))
             throw new OutOfRangeException();
 
         int newHealth = targetUnit.getHealth() - unit.getAttackPower();
@@ -156,15 +179,82 @@ public class GameCore {
         if (newHealth <= 0) {
             newPosition.removeUnit();
             targetUnit.getOwner().getUnits().remove(targetUnit);
+            moveUnit(currentPlayer,unit,oldPosition,newPosition);
+        }
+        nextTurn();
+    }
+
+    public void buyUnit(Unit unit, int x, int y, Map map) throws CoordinateBlockedException, NotEnoughMoneyException, NotYourTerritoryException {
+        if(this.currentPlayer.getResources() >= unit.getPrice()) {
+            placeUnit(unit, x, y, map);
+            getMap().getCellAt(x, y).setOwner(this.currentPlayer);
+            this.currentPlayer.getUnits().add(unit);
+            this.currentPlayer.setResources(this.currentPlayer.getResources() - unit.getPrice());
+        }
+        else {
+            throw new NotEnoughMoneyException();
         }
     }
 
-    private boolean isBlockedTerrain(Cell cell) {
+    public void sellUnit(Cell cell) throws NotYourUnitException, NoUnitSelectedException {
+        if (cell == null || cell.getUnit() == null){
+            return;
+        }
+        if (!cell.isOccupied()) {
+            throw new NoUnitSelectedException();
+        } else if (cell.getUnit().getOwner() != this.currentPlayer) {
+            throw new NotYourUnitException();
+        } else {
+            this.currentPlayer.getUnits().remove(cell.getUnit());
+            this.currentPlayer.setResources(this.currentPlayer.getResources() + cell.getUnit().getPrice() * 0.5);
+        }
+    }
+
+
+
+    public void placeUnit(Unit u, int x, int y, Map map) throws CoordinateBlockedException, NotYourTerritoryException {
+        Cell position = map.getCellAt(x, y);
+
+        if (position.isOccupied()) {
+            throw new CoordinateBlockedException("Cell is already occupied.");
+        }
+
+        if (!position.isPassable()) {
+            throw new CoordinateBlockedException("Cannot place unit on " + position.getTerrain() + " terrain.");
+        }
+
+        if (getMap().getCellAt(x, y).getOwner() != this.currentPlayer && getMap().getCellAt(x, y).getOwner() != null) {
+            throw new NotYourTerritoryException();
+        }
+
+        boolean neighboursOccupied = false;
+        for (Cell neighbor : map.getNeighbouringCells(position)) {
+            if (neighbor.isOccupied() && !neighbor.getOwner().equals(this.currentPlayer)) {
+                neighboursOccupied = true;
+                break;
+            }
+        }
+
+        if (neighboursOccupied) {
+            throw new CoordinateBlockedException("Enemy unit is too close.");
+        }
+
+        position.setOwner(this.currentPlayer);
+
+        if (!currentPlayer.getTerritory().contains(position)){
+            this.currentPlayer.addToTerritory(position);
+        }
+        position.setUnit(u);
+    }
+
+
+        private boolean isBlockedTerrain(Cell cell) {
         Cell.TerrainType t = cell.getTerrain();
         return t == Cell.TerrainType.TREE || t == Cell.TerrainType.ROCK;
     }
 
     private boolean isInMovementRange(Cell from, Cell to) {
+        currentPlayer.setCurrentUnit(from.getUnit());
         int range = currentPlayer.getCurrentUnit().getMovementRange(); // e.g., 1
         int dx = Math.abs(from.getX() - to.getX());
         int dy = Math.abs(from.getY() - to.getY());
@@ -174,11 +264,14 @@ public class GameCore {
 
 
     private boolean isInAttackRange(Cell from, Cell to) {
+        currentPlayer.setCurrentUnit(from.getUnit());
         int range = currentPlayer.getCurrentUnit().getAttackRange(); // e.g., 1 or 2
         int dx = Math.abs(from.getX() - to.getX());
         int dy = Math.abs(from.getY() - to.getY());
 
         return Math.max(dx, dy) <= range;
     }
+
+
 
 }

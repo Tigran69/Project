@@ -6,8 +6,8 @@ import java.util.Random;
 
 
 public class Map {
-    private final int width = 20;
-    private final int height = 20;
+    private final int width = 23;
+    private final int height = 37;
     private final Cell[][] grid = new Cell[width][height];
 
 
@@ -32,11 +32,20 @@ public class Map {
                 grid[x][y] = new Cell(x, y, null, null, terrain);
             }
         }
+        grid[0][0].setTerrain(Cell.TerrainType.NORMAL);
+        grid[width-1][height-1].setTerrain(Cell.TerrainType.NORMAL);
+    }
+
+    public int getWidth(){
+        return width;
+    }
+    public int getHeight(){
+        return height;
     }
 
 
     public List<Cell> getNeighbouringCells(Cell cell) {
-        List<Cell> neighbouringCells = new ArrayList<Cell>();
+        List<Cell> neighbouringCells = new ArrayList<>();
         int x = cell.getX();
         int y = cell.getY();
 

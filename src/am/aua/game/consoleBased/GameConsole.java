@@ -1,6 +1,7 @@
 package am.aua.game.consoleBased;
 
 import am.aua.game.exceptions.*;
+import am.aua.game.fileIO.SaveLoadManager;
 import am.aua.game.gameLogic.GameCore;
 import am.aua.game.navigation.Cell;
 import am.aua.game.navigation.Map;
@@ -11,7 +12,7 @@ import java.util.Scanner;
 
 public class GameConsole {
 
-    public void startGame() throws NotYourUnitException, InvalidPathException, MalformedStringException, PathNotClearException {
+    public static void startGame() throws NotYourUnitException, InvalidPathException, MalformedStringException, PathNotClearException, NotYourTerritoryException, CoordinateBlockedException {
         System.out.println("Game Started");
         System.out.println("Choose option");
         System.out.println("1. Play Game");
@@ -44,7 +45,7 @@ public class GameConsole {
 
                         while (!gameCore.checkLooseCondition()) {
                             System.out.println(gameCore.getCurrentPlayer().getName() + "'s turn");
-                            printMap(gameCore.getMap());
+                            printMap(gameCore,gameCore.getMap());
 
                             System.out.println("1. Attack");
                             System.out.println("2. Move");
@@ -122,7 +123,8 @@ public class GameConsole {
                         break;
                     }
                     case 2:
-                        System.out.println("Load game feature not implemented yet.");
+                        System.out.println("Loading game...");
+                        GameCore gameCore = SaveLoadManager.loadGame(System.getProperty("user.dir") + "\\src\\am\\aua\\game\\gameSave.txt");
                         break;
                     case 3:
                         System.out.println("Exiting...");
@@ -140,7 +142,7 @@ public class GameConsole {
         }
     }
 
-    public void printMap(Map map) {
+    public static void printMap(GameCore gameCore, Map map) {
         Cell[][] grid = map.getGrid();
         int height = grid[0].length;
         int width = grid.length;
@@ -160,7 +162,12 @@ public class GameConsole {
 
                 if (c.isOccupied()) {
                     symbol = c.getUnit().getSymbol();
-                    color = Map.ANSI_RED;
+                    if(c.getOwner() == gameCore.getPlayers().get(0)){
+                        color = Map.ANSI_RED;
+                    }
+                    else {
+                        color = Map.ANSI_CYAN;
+                    }
                 } else {
                     switch (c.getTerrain()) {
                         case TREE -> {
