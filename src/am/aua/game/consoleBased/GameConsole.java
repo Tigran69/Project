@@ -6,6 +6,8 @@ import am.aua.game.gameLogic.GameCore;
 import am.aua.game.navigation.Cell;
 import am.aua.game.navigation.Map;
 import am.aua.game.players.Player;
+import am.aua.game.gameLogic.*;
+import am.aua.game.units.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -47,12 +49,14 @@ public class GameConsole {
                             System.out.println(gameCore.getCurrentPlayer().getName() + "'s turn");
                             printMap(gameCore,gameCore.getMap());
 
-                            System.out.println("1. Attack");
-                            System.out.println("2. Move");
+                            System.out.println("1. Move");
+                            System.out.println("2. Attack");
                             System.out.println("3. Buy Unit");
-                            System.out.println("4. Surrender");
-                            System.out.println("5. SaveGame");
-                            System.out.println("6. Exit");
+                            System.out.println("4. Sell Unit");
+                            System.out.println("5. Save Game");
+                            System.out.println("6. Load Game");
+                            System.out.println("7. Surrender");
+                            System.out.println("8. Exit");
 
                             int playerChoice = scanner.nextInt();
 
@@ -100,21 +104,68 @@ public class GameConsole {
                                     break;
 
                                 case 3:
-                                    System.out.println("Buy unit feature not implemented yet.");
-                                    break;
-                                case 4:
-                                    System.out.println("Player " + gameCore.getCurrentPlayer().getName() + " surrendered.");
-                                    break;
-                                case 5:
-                                    System.out.println("Enter file path to save:");
-                                    scanner.nextLine();
-                                    String path = scanner.nextLine();
-                                    gameCore.saveGame(path);
-                                    System.out.println("Game saved.");
-                                    break;
-                                case 6:
-                                    System.out.println("Exiting...");
-                                    break;
+                                scanner.nextLine();
+                                System.out.println("Choose unit to buy: 1. Soldier, 2. Archer, 3. Tank");
+                                int unitChoice = scanner.nextInt();
+                                System.out.println("Enter coordinates to place the unit (x y):");
+                                int buyX = scanner.nextInt();
+                                int buyY = scanner.nextInt();
+
+                                Unit unitToBuy = null;
+                                switch (unitChoice) {
+                                    case 1 -> unitToBuy = new Soldier(gameCore.getCurrentPlayer());
+                                    case 2 -> unitToBuy = new Archer(gameCore.getCurrentPlayer());
+                                    case 3 -> unitToBuy = new Tank(gameCore.getCurrentPlayer());
+                                    default -> System.out.println("Invalid unit choice.");
+                                }
+
+                                if (unitToBuy != null) {
+                                    try {
+                                        gameCore.buyUnit(unitToBuy, buyX, buyY, gameCore.getMap());
+                                        System.out.println("Unit purchased.");
+                                    } catch (Exception e) {
+                                        System.out.println("Could not buy unit: " + e.getMessage());
+                                    }
+                                }
+                                gameCore.nextTurn();
+                                break;
+
+                            case 4:
+                                System.out.println("Enter coordinates of unit to sell (x y):");
+                                int sellX = scanner.nextInt();
+                                int sellY = scanner.nextInt();
+                                try {
+                                    gameCore.sellUnit(gameCore.getMap().getCellAt(sellX, sellY));
+                                    System.out.println("Unit sold.");
+                                } catch (Exception e) {
+                                    System.out.println("Could not sell unit: " + e.getMessage());
+                                }
+                                gameCore.nextTurn();
+                                break;
+
+                            case 5:
+                                System.out.println("Enter file path to save:");
+                                scanner.nextLine();
+                                String savePath = scanner.nextLine();
+                                gameCore.saveGame(savePath);
+                                System.out.println("Game saved.");
+                                break;
+
+                            case 6:
+                                System.out.println("Enter file path to load:");
+                                scanner.nextLine();
+                                String loadPath = scanner.nextLine();
+                                gameCore = SaveLoadManager.loadGame(loadPath);
+                                System.out.println("Game loaded.");
+                                break;
+
+                            case 7:
+                                System.out.println("Player " + gameCore.getCurrentPlayer().getName() + " surrendered.");
+                                return;
+
+                            case 8:
+                                System.out.println("Exiting...");
+                                return;
                                 default:
                                     System.out.println("Invalid option");
                             }
