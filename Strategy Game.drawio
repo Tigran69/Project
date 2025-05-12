@@ -1,23 +1,23 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0" version="26.2.9">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0" version="27.0.3">
   <diagram name="Page-1" id="b5b7bab2-c9e2-2cf4-8b2a-24fd1a2a6d21">
-    <mxGraphModel dx="1027" dy="441" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
+    <mxGraphModel dx="1426" dy="779" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-1" value="Unit &amp;lt;&amp;lt;abstract&amp;gt;&amp;gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="319.5" y="840" width="201" height="320" as="geometry" />
+          <mxGeometry x="320" y="960" width="201" height="350" as="geometry" />
         </mxCell>
-        <mxCell id="MaQOb-wrhwSt_xaOqxB8-2" value="# health: int&lt;br&gt;&lt;br&gt;# attackPower: int&lt;br&gt;&lt;br&gt;# movementRange: int&lt;br&gt;&lt;br&gt;# attackRange: int&lt;br&gt;&lt;br&gt;- owner: Player" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-1" vertex="1">
-          <mxGeometry y="26" width="201" height="134" as="geometry" />
+        <mxCell id="MaQOb-wrhwSt_xaOqxB8-2" value="- symbol: String&lt;br&gt;# health: int&lt;br&gt;# attackPower: int&lt;br&gt;# movementRange: int&lt;br&gt;# attackRange: int&lt;br&gt;- owner: Player&lt;br&gt;- price: int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-1" vertex="1">
+          <mxGeometry y="26" width="201" height="114" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-3" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="MaQOb-wrhwSt_xaOqxB8-1" vertex="1">
-          <mxGeometry y="160" width="201" height="8" as="geometry" />
+          <mxGeometry y="140" width="201" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="MaQOb-wrhwSt_xaOqxB8-4" value="+ move(destination: Cell): void&lt;br&gt;&lt;br&gt;+ attack(enemy: Unit): void (abstract)&lt;br&gt;&lt;br&gt;- isInRange(attacker: Unit, target: Unit): boolean&lt;br&gt;&lt;br&gt;- calculateDistance(a: Cell, b: Cell): int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-1" vertex="1">
-          <mxGeometry y="168" width="201" height="152" as="geometry" />
+        <mxCell id="MaQOb-wrhwSt_xaOqxB8-4" value="+ Unit(symbol: String, health: int, attackPower: int, &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; movementRange: int, attackRange: int,&amp;nbsp;&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; owner: Player, price: int)&lt;br&gt;+ getHealth(): int&lt;br&gt;+ setHealth(health: int): void&lt;br&gt;+ getAttackPower(): int&lt;br&gt;+ getMovementRange(): int&lt;br&gt;+ getAttackRange(): int&lt;br&gt;+ getOwner(): Player&lt;br&gt;+ getSymbol(): String&lt;br&gt;+ getPrice(): int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-1" vertex="1">
+          <mxGeometry y="148" width="201" height="202" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-5" value="Soldier" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="39" y="850" width="160" height="174" as="geometry" />
+          <mxGeometry x="39" y="960" width="160" height="148" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-6" value="&lt;div&gt;# health: int&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# attackPower: int&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# movementRange: int&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# attackRange: int&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-5" vertex="1">
           <mxGeometry y="26" width="160" height="114" as="geometry" />
@@ -25,17 +25,14 @@
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-7" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="MaQOb-wrhwSt_xaOqxB8-5" vertex="1">
           <mxGeometry y="140" width="160" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="MaQOb-wrhwSt_xaOqxB8-8" value="+ attack(enemy: Unit): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-5" vertex="1">
-          <mxGeometry y="148" width="160" height="26" as="geometry" />
-        </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-9" value="" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="MaQOb-wrhwSt_xaOqxB8-6" target="MaQOb-wrhwSt_xaOqxB8-2" edge="1">
           <mxGeometry width="160" relative="1" as="geometry">
-            <mxPoint x="199.5" y="1013" as="sourcePoint" />
-            <mxPoint x="430.5" y="190" as="targetPoint" />
+            <mxPoint x="210.5" y="1133" as="sourcePoint" />
+            <mxPoint x="441.5" y="310" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-10" value="Tank" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="639" y="850" width="160" height="180" as="geometry" />
+          <mxGeometry x="640" y="960" width="160" height="148" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-11" value="&lt;div&gt;# health: int&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# attackPower: int&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# movementRange: int&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# attackRange: int&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-10" vertex="1">
           <mxGeometry y="26" width="160" height="114" as="geometry" />
@@ -43,17 +40,14 @@
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-12" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="MaQOb-wrhwSt_xaOqxB8-10" vertex="1">
           <mxGeometry y="140" width="160" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="MaQOb-wrhwSt_xaOqxB8-13" value="&lt;div&gt;+ attack(enemy: Unit): void&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-10" vertex="1">
-          <mxGeometry y="148" width="160" height="32" as="geometry" />
-        </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-14" value="" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="MaQOb-wrhwSt_xaOqxB8-11" target="MaQOb-wrhwSt_xaOqxB8-2" edge="1">
           <mxGeometry width="160" relative="1" as="geometry">
-            <mxPoint x="639.5" y="1013" as="sourcePoint" />
-            <mxPoint x="430.5" y="190" as="targetPoint" />
+            <mxPoint x="650.5" y="1133" as="sourcePoint" />
+            <mxPoint x="441.5" y="310" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-16" value="Archer" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="340" y="1260" width="160" height="174" as="geometry" />
+          <mxGeometry x="340.5" y="1380" width="160" height="148" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-17" value="&lt;div&gt;# health: int&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# attackPower: int&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# movementRange: int&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;# attackRange: int&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-16" vertex="1">
           <mxGeometry y="26" width="160" height="114" as="geometry" />
@@ -61,68 +55,65 @@
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-18" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="MaQOb-wrhwSt_xaOqxB8-16" vertex="1">
           <mxGeometry y="140" width="160" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="MaQOb-wrhwSt_xaOqxB8-19" value="+ attack(enemy: Unit): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-16" vertex="1">
-          <mxGeometry y="148" width="160" height="26" as="geometry" />
-        </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-20" value="" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="MaQOb-wrhwSt_xaOqxB8-16" target="MaQOb-wrhwSt_xaOqxB8-1" edge="1">
           <mxGeometry width="160" relative="1" as="geometry">
-            <mxPoint x="420" y="1320" as="sourcePoint" />
-            <mxPoint x="430.5" y="370" as="targetPoint" />
+            <mxPoint x="431" y="1440" as="sourcePoint" />
+            <mxPoint x="441.5" y="490" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-21" value="Player" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="39" y="410" width="240" height="290" as="geometry" />
+          <mxGeometry x="39" y="520" width="240" height="300" as="geometry" />
         </mxCell>
-        <mxCell id="MaQOb-wrhwSt_xaOqxB8-22" value="- name: String&lt;br&gt;&lt;br&gt;&lt;div&gt;- units: List&amp;lt;Unit&amp;gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- territory: List&amp;lt;Cell&amp;gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- resources: int&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-21" vertex="1">
-          <mxGeometry y="26" width="240" height="114" as="geometry" />
+        <mxCell id="MaQOb-wrhwSt_xaOqxB8-22" value="- name: String&lt;br&gt;- abbreviation: char&lt;br&gt;- resources: double&lt;br&gt;- units: ArrayList&amp;lt;Unit&amp;gt;&lt;br&gt;- territory: ArrayList&amp;lt;Cell&amp;gt;&lt;br&gt;- currentUnit: Unit" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-21" vertex="1">
+          <mxGeometry y="26" width="240" height="94" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-23" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="MaQOb-wrhwSt_xaOqxB8-21" vertex="1">
-          <mxGeometry y="140" width="240" height="8" as="geometry" />
+          <mxGeometry y="120" width="240" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="MaQOb-wrhwSt_xaOqxB8-24" value="+ buyUnit(unit: Unit): void&lt;br&gt;&lt;br&gt;&lt;div&gt;+ sellUnit(unit: Unit): void&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ takeTurn(): void&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ collectResources(): void&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ moveUnit(Unit u, Cell newPosition): void&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-21" vertex="1">
-          <mxGeometry y="148" width="240" height="142" as="geometry" />
+        <mxCell id="MaQOb-wrhwSt_xaOqxB8-24" value="+ Player(name: String)&lt;br&gt;+ getName(): String&lt;br&gt;+ getResources(): double&lt;br&gt;+ setResources(resources: double): void&lt;br&gt;+ getCurrentUnit(): Unit&lt;br&gt;+ setCurrentUnit(currentUnit: Unit): void&lt;br&gt;+ getUnits(): ArrayList&amp;lt;Unit&amp;gt;&lt;br&gt;+ getTerritory(): ArrayList&amp;lt;Cell&amp;gt;&lt;br&gt;+ addToTerritory(cell: Cell): void&lt;br&gt;+ removeFromTerritory(cell: Cell): void&lt;br&gt;+ getAbbreviation(): char" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-21" vertex="1">
+          <mxGeometry y="128" width="240" height="172" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-25" value="Map" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="481" y="240" width="280" height="190" as="geometry" />
+          <mxGeometry x="480" y="160" width="280" height="320" as="geometry" />
         </mxCell>
-        <mxCell id="MaQOb-wrhwSt_xaOqxB8-26" value="&lt;div&gt;- grid: Cell[][]&lt;/div&gt;&lt;div&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/div&gt;&lt;div&gt;- width: int&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/div&gt;&lt;div&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/div&gt;- height: int&amp;nbsp;&amp;nbsp;&amp;nbsp; " style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-25" vertex="1">
-          <mxGeometry y="26" width="280" height="84" as="geometry" />
+        <mxCell id="MaQOb-wrhwSt_xaOqxB8-26" value="- width: int&lt;br&gt;- height: int&lt;br&gt;- grid: Cell[][]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-25" vertex="1">
+          <mxGeometry y="26" width="280" height="54" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-27" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="MaQOb-wrhwSt_xaOqxB8-25" vertex="1">
-          <mxGeometry y="110" width="280" height="8" as="geometry" />
+          <mxGeometry y="80" width="280" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="MaQOb-wrhwSt_xaOqxB8-28" value="&lt;div&gt;+ generateMap(): void &lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ getNeighboringCells(c: Cell): List&amp;lt;Cell&amp;gt; &lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-25" vertex="1">
-          <mxGeometry y="118" width="280" height="72" as="geometry" />
+        <mxCell id="MaQOb-wrhwSt_xaOqxB8-28" value="+ Map()&lt;br&gt;+ generateMap(): void&lt;br&gt;+ getWidth(): int&lt;br&gt;+ getHeight(): int&lt;br&gt;+ getNeighbouringCells(cell: Cell): List&amp;lt;Cell&amp;gt;&lt;br&gt;+ getGrid(): Cell[][]&lt;br&gt;+ getCellAt(x: int, y: int): Cell&lt;br&gt;-----------------------------------------------------------&lt;br&gt;- isWithinBounds(x: int, y: int): boolean&lt;br&gt;-----------------------------------------------------------&lt;br&gt;+ static RESET: String = &quot;\u001B[0m&quot;&lt;br&gt;+ static GREEN: String = &quot;\u001B[32m&quot;&lt;br&gt;+ static GREY: String = &quot;\u001B[90m&quot;&lt;br&gt;+ static ANSI_RED: String = &quot;\u001B[31m&quot;&lt;br&gt;+ static ANSI_CYAN: String = &quot;\u001B[36m&quot;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-25" vertex="1">
+          <mxGeometry y="88" width="280" height="232" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-29" value="Cell" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="480" y="560" width="280.5" height="210" as="geometry" />
+          <mxGeometry x="481" y="520" width="280.5" height="370" as="geometry" />
         </mxCell>
-        <mxCell id="MaQOb-wrhwSt_xaOqxB8-30" value="&lt;div&gt;&amp;nbsp;- x: int&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp;- y: int&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp;- owner: Player&amp;nbsp; &lt;/div&gt;&lt;br&gt;&lt;div&gt;&amp;nbsp;- unit: Unit &lt;br&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-29" vertex="1">
-          <mxGeometry y="26" width="280.5" height="114" as="geometry" />
+        <mxCell id="MaQOb-wrhwSt_xaOqxB8-30" value="- x: int&lt;br&gt;- y: int&lt;br&gt;- owner: Player&lt;br&gt;- unit: Unit&lt;br&gt;- terrain: TerrainType" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-29" vertex="1">
+          <mxGeometry y="26" width="280.5" height="84" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-31" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="MaQOb-wrhwSt_xaOqxB8-29" vertex="1">
-          <mxGeometry y="140" width="280.5" height="8" as="geometry" />
+          <mxGeometry y="110" width="280.5" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="MaQOb-wrhwSt_xaOqxB8-32" value="&lt;div&gt;+ changeOwnership(newOwner: Player): void&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ isOccupied(cell: Cell): boolean&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-29" vertex="1">
-          <mxGeometry y="148" width="280.5" height="62" as="geometry" />
+        <mxCell id="MaQOb-wrhwSt_xaOqxB8-32" value="+ Cell(x: int, y: int, owner: Player, unit: Unit, terrain: TerrainType)&lt;br&gt;+ getTerrain(): TerrainType&lt;br&gt;+ setTerrain(terrain: TerrainType): void&lt;br&gt;+ getX(): int&lt;br&gt;+ getY(): int&lt;br&gt;+ getOwner(): Player&lt;br&gt;+ setOwner(owner: Player): void&lt;br&gt;+ getUnit(): Unit&lt;br&gt;+ setUnit(unit: Unit): void&lt;br&gt;+ removeUnit(): void&lt;br&gt;+ isOccupied(): boolean&lt;br&gt;+ isPassable(): boolean&lt;br&gt;+ changeOwner(newOwner: Player): void&lt;br&gt;+ toString(): String&lt;br&gt;--------------------------------------------&lt;br&gt;+ enum TerrainType { NORMAL, ROCK, TREE }" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-29" vertex="1">
+          <mxGeometry y="118" width="280.5" height="252" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-33" value="GameSaveManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="481" y="40" width="279" height="120" as="geometry" />
+          <mxGeometry x="481" y="40" width="279" height="100" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-34" value="&lt;div&gt;+ saveGame(game: GameManager, filePath: String): void&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;+ loadGame(filePath: String): GameManager" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-33" vertex="1">
-          <mxGeometry y="26" width="279" height="94" as="geometry" />
+          <mxGeometry y="26" width="279" height="74" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-37" value="&lt;div&gt;GameCore&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="39" y="40" width="280" height="290" as="geometry" />
+          <mxGeometry x="39" y="40" width="280" height="440" as="geometry" />
         </mxCell>
-        <mxCell id="MaQOb-wrhwSt_xaOqxB8-38" value="&lt;div&gt;- currentPlayer: Player&amp;nbsp; &lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp;&lt;/div&gt;&lt;div&gt;- turnCount: int&lt;/div&gt;&lt;div&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;br&gt;&lt;/div&gt;&lt;div&gt;- gameMap: Map&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/div&gt;&lt;div&gt;&amp;nbsp;&lt;/div&gt;&lt;div&gt; - players: Player[]&amp;nbsp; &lt;br&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-37" vertex="1">
-          <mxGeometry y="26" width="280" height="114" as="geometry" />
+        <mxCell id="MaQOb-wrhwSt_xaOqxB8-38" value="- players: List&amp;lt;Player&amp;gt;&lt;br&gt;- currentPlayer: Player&lt;br&gt;- turnCount: int&lt;br&gt;- map: Map" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-37" vertex="1">
+          <mxGeometry y="26" width="280" height="64" as="geometry" />
         </mxCell>
         <mxCell id="MaQOb-wrhwSt_xaOqxB8-39" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="MaQOb-wrhwSt_xaOqxB8-37" vertex="1">
-          <mxGeometry y="140" width="280" height="8" as="geometry" />
+          <mxGeometry y="90" width="280" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="MaQOb-wrhwSt_xaOqxB8-40" value="&lt;div&gt;+ startGame(): void&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ nextTurn(): void&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/div&gt;&lt;br&gt;&lt;div&gt;+ checkLooseCondition(): boolean&amp;nbsp; &lt;/div&gt;&lt;br&gt;&lt;div&gt;+ saveGame(filePath: String): void &lt;/div&gt;&lt;br&gt;+ loadGame(filePath: String): void " style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-37" vertex="1">
-          <mxGeometry y="148" width="280" height="142" as="geometry" />
+        <mxCell id="MaQOb-wrhwSt_xaOqxB8-40" value="+ GameCore(players: List&amp;lt;Player&amp;gt;)&lt;br&gt;+ GameCore(players: List&amp;lt;Player&amp;gt;, map: Map)&lt;br&gt;+ startGame(): void&lt;br&gt;+ nextTurn(): void&lt;br&gt;+ collectRecourses(): void&lt;br&gt;+ checkLooseCondition(): boolean&lt;br&gt;+ getTurnCount(): int&lt;br&gt;+ getMap(): Map&lt;br&gt;+ getCurrentPlayer(): Player&lt;br&gt;+ getPlayers(): List&amp;lt;Player&amp;gt;&lt;br&gt;+ saveGame(filePath: String): void&lt;br&gt;+ loadGame(filePath: String): void&lt;br&gt;+ setTurnCount(turn: int): void&lt;br&gt;+ setCurrentPlayer(currentPlayer: Player): void&lt;br&gt;+ setMap(map: Map): void&lt;br&gt;+ isPathClear(from: Cell, to: Cell): boolean&lt;br&gt;+ moveUnit(currentPlayer: Player, unit: Unit, oldPosition: Cell, newPosition: Cell): void&lt;br&gt;+ attackUnit(currentPlayer: Player, unit: Unit, oldPosition: Cell, newPosition: Cell): void&lt;br&gt;- isBlockedTerrain(cell: Cell): boolean&lt;br&gt;- isInMovementRange(from: Cell, to: Cell): boolean&lt;br&gt;- isInAttackRange(from: Cell, to: Cell): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="MaQOb-wrhwSt_xaOqxB8-37" vertex="1">
+          <mxGeometry y="98" width="280" height="342" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
