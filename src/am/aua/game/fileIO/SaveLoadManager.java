@@ -20,15 +20,15 @@ public class SaveLoadManager {
             }
 
             Map map = gameCore.getMap();
-            for (int x = 0; x < 20; x++) {
-                for (int y = 0; y < 20; y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                for (int y = 0; y < map.getHeight(); y++) {
                     Cell cell = map.getCellAt(x, y);
                     writer.println("TERRAIN:" + x + "," + y + ":" + cell.getTerrain().name());
                 }
             }
 
-            for (int x = 0; x < 20; x++) {
-                for (int y = 0; y < 20; y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                for (int y = 0; y < map.getHeight(); y++) {
                     Cell cell = map.getCellAt(x, y);
                     if (cell.isOccupied()) {
                         Unit unit = cell.getUnit();
@@ -39,6 +39,14 @@ public class SaveLoadManager {
                     }
                 }
             }
+            for (Player player : gameCore.getPlayers()) {
+                for (Cell cell : player.getTerritory()) {
+                    int x = cell.getX();
+                    int y = cell.getY();
+                    writer.println("TERRITORY:" + player.getName() + ":" + x + "," + y);
+                }
+            }
+
 
         } catch (IOException e) {
             System.err.println("Error saving game: " + e.getMessage());
@@ -105,7 +113,28 @@ public class SaveLoadManager {
                     }
                 } else if (line.startsWith("CURRENT_PLAYER:")) {
                     currentPlayerName = line.split(":")[1];
+                }else if (line.startsWith("TERRITORY:")) {
+                    String[] parts = line.split(":");
+                    String playerName = parts[1];
+                    String[] coords = parts[2].split(",");
+                    int x = Integer.parseInt(coords[0]);
+                    int y = Integer.parseInt(coords[1]);
+
+                    Player owner = null;
+                    for (Player p : players) {
+                        if (p.getName().equals(playerName)) {
+                            owner = p;
+                            break;
+                        }
+                    }
+
+                    if (owner != null) {
+                        Cell cell = map.getCellAt(x, y);
+                        cell.changeOwner(owner);
+                        owner.addToTerritory(cell);
+                    }
                 }
+
             }
 
         } catch (IOException e) {

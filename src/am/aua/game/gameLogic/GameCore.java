@@ -8,6 +8,10 @@ import am.aua.game.players.Player;
 import am.aua.game.units.Unit;
 import java.util.List;
 
+/**
+ * Core logic class for handling the turn-based strategy game mechanics.
+ */
+
 public class GameCore {
 
     private final List<Player> players;
@@ -15,26 +19,37 @@ public class GameCore {
     private int turnCount;
     private Map map;
 
+    /**
+     * Constructs a GameCore with given players and initializes the game map.
+     * @param players The list of players.
+     */
     public GameCore(List<Player> players){
         this.players = players;
         this.currentPlayer = players.get(0);
         this.turnCount = 0;
         this.map = new Map();
-//        placeUnit(new Soldier(currentPlayer), 0,0,map);
-//        nextTurn();
-//        placeUnit(new Soldier(currentPlayer), map.getWidth()-1, map.getHeight()-1, map);
-//        nextTurn();
     }
 
+    /**
+     * Constructs a GameCore with players and an already existing map.
+     * @param players The list of players.
+     * @param map The game map.
+     */
     public GameCore(List<Player> players, Map map) {
         this.players = players;
         this.map = map;
     }
 
+    /**
+     * Starts the game by generating the map.
+     */
     public void startGame(){
         map.generateMap();
     }
 
+    /**
+     * Moves to the next player's turn and collects resources every 5 turns.
+     */
     public void nextTurn(){
         turnCount++;
         collectRecourses();
@@ -42,6 +57,9 @@ public class GameCore {
         currentPlayer = players.get((currentIndex + 1) % players.size());
     }
 
+    /**
+     * Adds resources to players every 5 turns.
+     */
     public void collectRecourses(){
         if (this.turnCount != 0 && this.turnCount % 5 == 0){
             players.get(0).setResources(players.get(0).getResources() + 200);
@@ -49,9 +67,14 @@ public class GameCore {
         }
     }
 
+    /**
+     * Checks if the current player has lost.
+     * @return true if the player has no resources or territory after 5 turns.
+     */
     public boolean checkLooseCondition(){
         return (this.currentPlayer.getResources() <= 0 || this.currentPlayer.getTerritory().isEmpty() && this.turnCount > 5);
     }
+
 
     public int getTurnCount(){
         return this.turnCount;
@@ -69,14 +92,21 @@ public class GameCore {
         return players;
     }
 
+    /**
+     * Saves the current game state to a file.
+     * @param filePath The path to the save file.
+     */
     public void saveGame(String filePath){
         SaveLoadManager.saveGame(filePath, this);
     }
 
+    /**
+     * Loads a game from a file.
+     * @param filePath The path to the save file.
+     */
     public void loadGame(String filePath){
         SaveLoadManager.loadGame(filePath);
     }
-
 
     public void setTurnCount(int turn) {
         this.turnCount = turn;
@@ -90,6 +120,12 @@ public class GameCore {
         this.map = map;
     }
 
+    /**
+     * Checks if the path between two cells is clear.
+     * @param from Start cell.
+     * @param to Destination cell.
+     * @return true if the path is clear.
+     */
     public boolean isPathClear(Cell from, Cell to) {
         int x0 = from.getX();
         int y0 = from.getY();
@@ -122,6 +158,17 @@ public class GameCore {
         return !dest.isOccupied() && !isBlockedTerrain(dest);
     }
 
+    /**
+     * Moves a unit if the path is clear and within range.
+     *
+     * @param currentPlayer The player attempting to move the unit.
+     * @param unit The unit to move.
+     * @param oldPosition The current cell of the unit.
+     * @param newPosition The target cell to move to.
+     * @throws NotYourUnitException if the unit doesn't belong to the player.
+     * @throws PathNotClearException if the path is blocked or target cell is occupied.
+     * @throws OutOfRangeException if destination is out of movement range.
+     */
     public void moveUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition)
             throws NotYourUnitException, PathNotClearException, OutOfRangeException {
 
@@ -158,6 +205,19 @@ public class GameCore {
     }
 
 
+    /**
+     * Attacks an enemy unit.
+     *
+     * @param currentPlayer The player attacking.
+     * @param unit The attacking unit.
+     * @param oldPosition Position of the attacker.
+     * @param newPosition Position of the target.
+     * @throws NotYourUnitException If the unit is not owned by the current player.
+     * @throws FriendlyFireException If the target unit belongs to the same player.
+     * @throws OutOfRangeException If the target is out of range.
+     * @throws PathNotClearException If path is blocked.
+     * @throws NoUnitSelectedException If no unit is present in the target cell.
+     */
     public void attackUnit(Player currentPlayer, Unit unit, Cell oldPosition, Cell newPosition) throws NotYourUnitException, FriendlyFireException, OutOfRangeException, PathNotClearException, NoUnitSelectedException {
         if (unit.getOwner() != currentPlayer)
             throw new NotYourUnitException();
@@ -184,6 +244,17 @@ public class GameCore {
         nextTurn();
     }
 
+    /**
+     * Buys and places a unit on the map.
+     *
+     * @param unit Unit to be bought.
+     * @param x X-coordinate.
+     * @param y Y-coordinate.
+     * @param map The game map.
+     * @throws CoordinateBlockedException If the cell is occupied or near enemies.
+     * @throws NotEnoughMoneyException If the player doesn't have enough resources.
+     * @throws NotYourTerritoryException If the cell is not in the player’s territory.
+     */
     public void buyUnit(Unit unit, int x, int y, Map map) throws CoordinateBlockedException, NotEnoughMoneyException, NotYourTerritoryException {
         if(this.currentPlayer.getResources() >= unit.getPrice()) {
             placeUnit(unit, x, y, map);
@@ -196,6 +267,13 @@ public class GameCore {
         }
     }
 
+    /**
+     * Sells a unit on the given cell.
+     *
+     * @param cell The cell containing the unit to sell.
+     * @throws NotYourUnitException If the unit does not belong to the player.
+     * @throws NoUnitSelectedException If the cell has no unit.
+     */
     public void sellUnit(Cell cell) throws NotYourUnitException, NoUnitSelectedException {
         if (cell == null || cell.getUnit() == null){
             return;
@@ -211,7 +289,16 @@ public class GameCore {
     }
 
 
-
+    /**
+     * Places a unit on the map.
+     *
+     * @param u The unit to place.
+     * @param x X-coordinate.
+     * @param y Y-coordinate.
+     * @param map The game map.
+     * @throws CoordinateBlockedException If the cell is not valid for placement.
+     * @throws NotYourTerritoryException If the cell is not in the player’s territory.
+     */
     public void placeUnit(Unit u, int x, int y, Map map) throws CoordinateBlockedException, NotYourTerritoryException {
         Cell position = map.getCellAt(x, y);
 
@@ -247,12 +334,22 @@ public class GameCore {
         position.setUnit(u);
     }
 
-
+    /**
+     * Checks if the terrain of a cell is blocked (TREE or ROCK).
+     * @param cell The cell to check.
+     * @return true if terrain blocks movement.
+     */
         private boolean isBlockedTerrain(Cell cell) {
         Cell.TerrainType t = cell.getTerrain();
         return t == Cell.TerrainType.TREE || t == Cell.TerrainType.ROCK;
     }
 
+    /**
+     * Checks if the destination is within movement range of the unit.
+     * @param from Starting cell.
+     * @param to Target cell.
+     * @return true if within range.
+     */
     private boolean isInMovementRange(Cell from, Cell to) {
         currentPlayer.setCurrentUnit(from.getUnit());
         int range = currentPlayer.getCurrentUnit().getMovementRange(); // e.g., 1
@@ -262,7 +359,12 @@ public class GameCore {
         return Math.max(dx, dy) <= range;
     }
 
-
+    /**
+     * Checks if the destination is within attack range of the unit.
+     * @param from Starting cell.
+     * @param to Target cell.
+     * @return true if within range.
+     */
     private boolean isInAttackRange(Cell from, Cell to) {
         currentPlayer.setCurrentUnit(from.getUnit());
         int range = currentPlayer.getCurrentUnit().getAttackRange(); // e.g., 1 or 2

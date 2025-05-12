@@ -23,8 +23,8 @@ public class MainMenu extends Application {
         primaryStage.setTitle("Strategy Game - Main Menu");
 
         // --- Title ---
-        Label title = new Label("⚔️ Strategy Game");
-        title.setStyle("-fx-font-size: 32px; -fx-text-fill: white; -fx-font-weight: bold;");
+//        Label title = new Label("⚔️ Strategy Game");
+//        title.setStyle("-fx-font-size: 32px; -fx-text-fill: white; -fx-font-weight: bold;");
 
         // --- Buttons ---
         Button newGameBtn = styledButton("Start New Game");
@@ -70,7 +70,7 @@ public class MainMenu extends Application {
         exitBtn.setOnAction(e -> primaryStage.close());
 
         // --- Layout ---
-        VBox menuBox = new VBox(20, title, newGameBtn, loadGameBtn, exitBtn);
+        VBox menuBox = new VBox(20, newGameBtn, loadGameBtn, exitBtn);
         menuBox.setAlignment(Pos.CENTER);
 
         StackPane root = new StackPane(menuBox);
