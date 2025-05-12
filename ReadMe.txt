@@ -39,10 +39,6 @@ Steps to Run the GUI Mode:
 2. Compile and build the project.
 3. Run the program without any arguments.
 
-java -jar strategy_game.jar
-
-The program will launch a window with the JavaFX-based interface. You can interact with the game using the visual interface, including selecting units, moving them, and seeing the map.
-
 ---
 
 Requirements:
@@ -61,8 +57,6 @@ Steps:
 
 mvn clean package
 
-This will create the strategy_game.jar file, which you can run in both CLI and GUI modes.
-
 ---
 
 Save and Load Functionality
@@ -76,11 +70,6 @@ The game includes a save/load feature, allowing you to save the game state and r
 Known Issues:
 - JavaFX setup may require additional configuration for certain environments (e.g., Java 11+).
 - Game logic may not be fully optimized in the current version.
-
----
-
-License:
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
