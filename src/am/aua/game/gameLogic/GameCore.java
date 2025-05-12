@@ -358,7 +358,7 @@ public class GameCore {
 
         return Math.max(dx, dy) <= range;
     }
-
+//
     /**
      * Checks if the destination is within attack range of the unit.
      * @param from Starting cell.
